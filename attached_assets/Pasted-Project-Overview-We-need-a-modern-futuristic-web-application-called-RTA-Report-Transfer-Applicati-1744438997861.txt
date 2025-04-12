@@ -1,0 +1,108 @@
+Project Overview
+We need a modern, futuristic web application called RTA (Report Transfer Application) for the Ministerul Energiei al Republicii Moldova. The primary function is to let authorized users upload, view, and manage documents (Excel — .xlsx — and Word — .docx). The design must use a clean, blue marine and white color palette, with subtle gradients or accents to convey a high‑tech, forward‑looking aesthetic.
+
+Global Requirements
+
+Color palette: deep marine blue (#0B3D91), sky blue (#4A90E2), white (#FFFFFF)
+
+Typography: sans‑serif, geometric (e.g. Montserrat, Roboto)
+
+Iconography: line‑based, minimalist
+
+Layout: responsive grid, clear hierarchy, generous white space
+
+Interactions: smooth transitions, hover/focus states, micro‑animations for feedback
+
+1. Authentication
+
+Login / Signup page
+
+Fields: Username, Password
+
+“Forgot password?” link
+
+Use a split‑screen or card layout with a hero image or abstract animated background in blue gradients.
+
+2. Company Data Page
+
+Show basic company info: name, address, registration number, contact details
+
+Include a consolidated “Order” table or dashboard summary:
+
+Columns: Order ID, Date, Status, Total Documents
+
+Quick‑action buttons: View, Download, Edit
+
+3. Residents’ Data Page
+
+Display resident records from both an external registry API and the internal database
+
+Table view with sortable columns: Name, ID, Address, Registration Date
+
+Ability to toggle between “External” and “Internal” sources
+
+Checkboxes or multi‑select dropdown to choose specific fields or records for export
+
+4. Type/Field Selection Page
+
+Provide a set of filters or dropdown menus to select data types (e.g., financial, personal, administrative) or individual fields (e.g., name, ID, date of birth)
+
+Show a preview panel of selected fields in tabular form
+
+5. (Optional) Intermediate Validation Step
+
+After selection, show a summary form where the user can validate or correct entries before proceeding
+
+Include inline validation and tooltips
+
+6. Pre‑Buy (Pre‑Payment) Order Page
+
+A “draft order” form where users specify:
+
+Document package (e.g., number of files, type)
+
+Price per unit, total cost
+
+Quantity selector, date picker for delivery
+
+“Save Draft” and “Proceed to Payment” buttons
+
+7. Form Submission / Sending Page
+
+Final review of all order details
+
+“Confirm and Send” button, with a summary sidebar showing cost breakdown
+
+Inline checks (e.g., required fields, payment info)
+
+8. Notifications / Subscription Updates
+
+A bell icon in the header showing unread notifications
+
+A dropdown or dedicated page listing: order updates, system messages, video tutorials or alerts for subscribed users
+
+9. Received Content (Confirmation) Page
+
+After payment/processing, list all “Received Orders” or “Received Documents”
+
+Table with columns: Document name, Date received, Download link, Status
+
+Option to filter by date or type
+
+Extra UI/UX Notes
+
+Use a sticky header with the RTA logo and main navigation (Company Data, Residents, Orders, Notifications, Profile)
+
+Breadcrumbs on deeper pages for context
+
+Loading skeletons for data tables
+
+Accessibility: high contrast text, keyboard‑navigable, ARIA labels
+
+Deliverables
+
+High‑fidelity mockups (desktop & mobile)
+
+Style guide (colors, typography, components)
+
+Prototype with basic navigation and sample data
