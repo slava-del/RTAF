@@ -849,13 +849,17 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
-import path2 from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import path2 from "path";
+import { fileURLToPath } from "url";
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = path2.dirname(__filename);
 var vite_config_default = defineConfig({
   plugins: [
     react(),
     runtimeErrorOverlay(),
     themePlugin(),
+    // Allow asynchronous plugin import for development
     ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
       await import("@replit/vite-plugin-cartographer").then(
         (m) => m.cartographer()
@@ -864,20 +868,23 @@ var vite_config_default = defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path2.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path2.resolve(import.meta.dirname, "shared"),
-      "@assets": path2.resolve(import.meta.dirname, "attached_assets")
+      "@": path2.resolve(__dirname, "client", "src"),
+      "@shared": path2.resolve(__dirname, "shared"),
+      "@assets": path2.resolve(__dirname, "attached_assets")
     }
   },
-  root: path2.resolve(import.meta.dirname, "client"),
+  root: path2.resolve(__dirname, "client"),
   build: {
-    outDir: path2.resolve(import.meta.dirname, "dist/public"),
+    outDir: path2.resolve(__dirname, "dist/public"),
     emptyOutDir: true
   }
 });
 
 // server/vite.ts
 import { nanoid } from "nanoid";
+import { fileURLToPath as fileURLToPath2 } from "url";
+var __filename2 = fileURLToPath2(import.meta.url);
+var __dirname2 = path3.dirname(__filename2);
 var viteLogger = createLogger();
 function log(message, source = "express") {
   const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
@@ -912,7 +919,7 @@ async function setupVite(app2, server) {
     const url = req.originalUrl;
     try {
       const clientTemplate = path3.resolve(
-        import.meta.dirname,
+        __dirname2,
         "..",
         "client",
         "index.html"
@@ -931,7 +938,7 @@ async function setupVite(app2, server) {
   });
 }
 function serveStatic(app2) {
-  const distPath = path3.resolve(import.meta.dirname, "public");
+  const distPath = path3.resolve(__dirname2, "public");
   if (!fs2.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
