@@ -2,9 +2,37 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+import cors, { CorsOptions } from "cors";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const whitelist = [
+  "https://drive.google.com",
+  "http://localhost:5000",
+  "https://coherent-dolphin-calm.ngrok-free.app",
+  // for local dev
+  // add more as needed
+];
+
+const corsOptions: CorsOptions = {
+  origin: (incomingOrigin, callback) => {
+    // allow requests with no origin (e.g. mobile apps, curl)
+    if (!incomingOrigin) {
+      return callback(null, true);
+    }
+    if (whitelist.includes(incomingOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: origin ${incomingOrigin} not allowed`));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,  // if you need to send cookies/auth headers
+};
+
+app.use(cors(corsOptions));
 
 // ——— Request logging middleware ———
 app.use((req, res, next) => {

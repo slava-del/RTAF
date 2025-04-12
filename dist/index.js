@@ -951,9 +951,34 @@ function serveStatic(app2) {
 }
 
 // server/index.ts
+import cors from "cors";
 var app = express2();
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
+var whitelist = [
+  "https://drive.google.com",
+  "http://localhost:5000",
+  "https://coherent-dolphin-calm.ngrok-free.app"
+  // for local dev
+  // add more as needed
+];
+var corsOptions = {
+  origin: (incomingOrigin, callback) => {
+    if (!incomingOrigin) {
+      return callback(null, true);
+    }
+    if (whitelist.includes(incomingOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: origin ${incomingOrigin} not allowed`));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+  // if you need to send cookies/auth headers
+};
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
   const start = Date.now();
   const path4 = req.path;

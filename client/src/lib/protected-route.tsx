@@ -1,5 +1,4 @@
-import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
+import React from "react";
 import { Redirect, Route } from "wouter";
 
 export function ProtectedRoute({
@@ -9,25 +8,20 @@ export function ProtectedRoute({
   path: string;
   component: () => React.JSX.Element;
 }) {
-  const { user, isLoading } = useAuth();
+  // STUB: pretend we’re never loading and always have a user
+  const isLoading = false;
+  const user = { id: "dev", username: "dev" };
 
   if (isLoading) {
     return (
       <Route path={path}>
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          {/* Your spinner */}
         </div>
       </Route>
     );
   }
 
-  if (!user) {
-    return (
-      <Route path={path}>
-        <Redirect to="/auth" />
-      </Route>
-    );
-  }
-
+  // always have user → never redirect
   return <Route path={path} component={Component} />;
 }
