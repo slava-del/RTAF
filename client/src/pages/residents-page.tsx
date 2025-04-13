@@ -11,6 +11,7 @@ import remarkGfm from "remark-gfm";
 export default function ResidentsPage() {
   const [mdContent, setMdContent] = useState<string>("");
   const [driveUrl, setDriveUrl] = useState<string>("");
+  const [selectedReportId, setSelectedReportId] = useState<string>("");
 
   const [reports, setReports] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -116,7 +117,7 @@ export default function ResidentsPage() {
     reader.readAsText(file);
   };
 
-  // Load from Drive handler
+  // Fixed Google Drive handler
   const handleLoadFromDrive = async () => {
     const idMatch = driveUrl.match(/[-\w]{25,}/);
     if (!idMatch) {
@@ -127,13 +128,48 @@ export default function ResidentsPage() {
     const rawUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
     try {
-      const res = await fetch(rawUrl);
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+        rawUrl
+      )}`;
+      const res = await fetch(proxyUrl);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
       setMdContent(text);
     } catch (err) {
       console.error(err);
-      alert("Failed to load from Drive. Check permissions or URL.");
+      alert("Failed to load from Drive. Make sure the file is public.");
+    }
+  };
+
+  const handleLinkEmergency = () => {
+    if (!("Notification" in window)) {
+      alert("This browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification("EMERGENCY SITUATION!!", {
+          body: `Document Linked: ${selectedReportId}`,
+        });
+      }
+    });
+  };
+
+  const handleEmergencyPush = async () => {
+    if (!("Notification" in window)) {
+      alert("This browser does not support notifications.");
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      new Notification("🚨 EMERGENCY SITUATION!!", {
+        body: "Document Linked: 1",
+      });
+    } else {
+      alert("Notification permission denied or blocked.");
     }
   };
 
@@ -169,7 +205,7 @@ export default function ResidentsPage() {
           <h3 className="text-lg font-medium">Markdown Editor & Preview</h3>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Local Upload */}
+          {/* Upload */}
           <input
             id="md-upload"
             type="file"
@@ -194,6 +230,25 @@ export default function ResidentsPage() {
             />
             <Button size="sm" onClick={handleLoadFromDrive}>
               Load
+            </Button>
+          </div>
+
+          {/* Select Report */}
+          <div className="flex space-x-4 items-center">
+            <select
+              value={selectedReportId}
+              onChange={(e) => setSelectedReportId(e.target.value)}
+              className="p-2 border rounded-md text-sm"
+            >
+              <option value="">Select report...</option>
+              {reports.map((r) => (
+                <option key={r.id} value={r.id}>
+                  Report #{r.id}
+                </option>
+              ))}
+            </select>
+            <Button onClick={handleEmergencyPush}>
+              Link Emergency Situation
             </Button>
           </div>
 
