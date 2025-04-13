@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { Resident } from "@shared/schema";
 import { formatDate } from "@/lib/utils";
-import { useLocation } from "wouter"
+import { useLocation } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,37 +26,35 @@ export default function ResidentsPage() {
   const [mdContent, setMdContent] = useState<string>("");
   const [driveUrl, setDriveUrl] = useState<string>("");
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    fetch('https://quiet-evident-hookworm.ngrok-free.app/api/reports')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    })
-
-  }, [])
+    fetch("http://localhost:8000/api/reports/?format=json")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  }, []);
 
   const { data: residents = [], isLoading } = useQuery<Resident[], Error>({
     queryKey: ["/api/residents", source !== "all" ? `?source=${source}` : ""],
   });
 
-  const filteredResidents = source === "all"
-    ? residents
-    : residents.filter(r => r.source === source);
+  const filteredResidents =
+    source === "all" ? residents : residents.filter((r) => r.source === source);
 
   const handleSelectResident = (resident: Resident) => {
-    setSelectedResidents(prev =>
-      prev.some(r => r.id === resident.id)
-        ? prev.filter(r => r.id !== resident.id)
+    setSelectedResidents((prev) =>
+      prev.some((r) => r.id === resident.id)
+        ? prev.filter((r) => r.id !== resident.id)
         : [...prev, resident]
     );
   };
 
   const handleSelectAll = () => {
-    setSelectedResidents(prev =>
+    setSelectedResidents((prev) =>
       prev.length === filteredResidents.length ? [] : [...filteredResidents]
     );
   };
@@ -108,12 +106,16 @@ export default function ResidentsPage() {
       accessorKey: (row: Resident) => row.id,
       cell: (row: Resident) => (
         <Checkbox
-          checked={selectedResidents.some(r => r.id === row.id)}
+          checked={selectedResidents.some((r) => r.id === row.id)}
           onCheckedChange={() => handleSelectResident(row)}
         />
       ),
     },
-    { header: "Name", accessorKey: "name", cell: (r: Resident) => <span className="font-medium">{r.name}</span> },
+    {
+      header: "Name",
+      accessorKey: "name",
+      cell: (r: Resident) => <span className="font-medium">{r.name}</span>,
+    },
     { header: "ID", accessorKey: "residentId" },
     { header: "Address", accessorKey: "address" },
     {
@@ -127,7 +129,11 @@ export default function ResidentsPage() {
       cell: (r: Resident) => (
         <Badge
           variant="outline"
-          className={r.source === "internal" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"}
+          className={
+            r.source === "internal"
+              ? "bg-blue-100 text-blue-800"
+              : "bg-purple-100 text-purple-800"
+          }
         >
           {r.source}
         </Badge>
@@ -144,7 +150,7 @@ export default function ResidentsPage() {
       {/* ── Source Tabs & Table ── */}
       <Card className="mb-6">
         <CardHeader className="pb-3">
-          <Tabs defaultValue="all" onValueChange={v => setSource(v as any)}>
+          <Tabs defaultValue="all" onValueChange={(v) => setSource(v as any)}>
             <div className="flex justify-between items-center">
               <TabsList>
                 <TabsTrigger value="all">All Sources</TabsTrigger>
@@ -158,7 +164,8 @@ export default function ResidentsPage() {
                   onClick={handleSelectAll}
                   disabled={isLoading || filteredResidents.length === 0}
                 >
-                  {selectedResidents.length === filteredResidents.length && filteredResidents.length > 0
+                  {selectedResidents.length === filteredResidents.length &&
+                  filteredResidents.length > 0
                     ? "Deselect All"
                     : "Select All"}
                 </Button>
@@ -173,16 +180,22 @@ export default function ResidentsPage() {
               </div>
             </div>
 
-            {["all", "internal", "external"].map(tab => (
+            {["all", "internal", "external"].map((tab) => (
               <TabsContent key={tab} value={tab} className="pt-4">
                 {isLoading ? (
                   <div className="space-y-3">
-                    {Array(5).fill(0).map((_, i) => (
-                      <Skeleton key={i} className="h-10 w-full" />
-                    ))}
+                    {Array(5)
+                      .fill(0)
+                      .map((_, i) => (
+                        <Skeleton key={i} className="h-10 w-full" />
+                      ))}
                   </div>
                 ) : (
-                  <DataTable data={filteredResidents} columns={columns} searchField="name" />
+                  <DataTable
+                    data={filteredResidents}
+                    columns={columns}
+                    searchField="name"
+                  />
                 )}
               </TabsContent>
             ))}
@@ -216,7 +229,7 @@ export default function ResidentsPage() {
               type="text"
               placeholder="Paste Drive URL or file ID"
               value={driveUrl}
-              onChange={e => setDriveUrl(e.target.value)}
+              onChange={(e) => setDriveUrl(e.target.value)}
               className="flex-1 p-2 border rounded-md text-sm"
             />
             <Button size="sm" onClick={handleLoadFromDrive}>
@@ -227,7 +240,7 @@ export default function ResidentsPage() {
           {/* Editor */}
           <textarea
             value={mdContent}
-            onChange={e => setMdContent(e.target.value)}
+            onChange={(e) => setMdContent(e.target.value)}
             placeholder="Write or edit Markdown here…"
             className="w-full h-40 p-2 border rounded-md font-mono text-sm"
           />
@@ -251,12 +264,18 @@ export default function ResidentsPage() {
         <CardContent>
           {selectedResidents.length === 0 ? (
             <div className="text-center py-4 text-gray-500">
-              <Icon name="users" className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-              <p>No residents selected. Select residents from the table above to proceed.</p>
+              <Icon
+                name="users"
+                className="h-8 w-8 mx-auto mb-2 text-gray-400"
+              />
+              <p>
+                No residents selected. Select residents from the table above to
+                proceed.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {selectedResidents.map(r => (
+              {selectedResidents.map((r) => (
                 <div
                   key={r.id}
                   className="border rounded-md p-3 bg-gray-50 flex justify-between items-center"
@@ -265,7 +284,11 @@ export default function ResidentsPage() {
                     <p className="font-medium">{r.name}</p>
                     <p className="text-sm text-gray-500">{r.residentId}</p>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => handleSelectResident(r)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSelectResident(r)}
+                  >
                     <Icon name="x-circle" className="h-4 w-4 text-gray-400" />
                   </Button>
                 </div>
