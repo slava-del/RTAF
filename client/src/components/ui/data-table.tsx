@@ -39,14 +39,13 @@ export function DataTable<T>({
   const filteredData = searchField
     ? data.filter((item) => {
         const value = item[searchField];
-        if (typeof value === "string") {
-          return value.toLowerCase().includes(searchQuery.toLowerCase());
-        }
-        return false;
+        return value && typeof value === "string"
+          ? value.toLowerCase().includes(searchQuery.toLowerCase())
+          : true;
       })
     : data;
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / pageSize));
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
 
@@ -95,14 +94,16 @@ export function DataTable<T>({
               paginatedData.map((row, rowIndex) => (
                 <TableRow
                   key={rowIndex}
-                  className={onRowClick ? "cursor-pointer hover:bg-gray-50" : ""}
-                  onClick={() => onRowClick && onRowClick(row)}
+                  className={
+                    onRowClick ? "cursor-pointer hover:bg-gray-50" : ""
+                  }
+                  onClick={() => onRowClick?.(row)}
                 >
                   {columns.map((column, colIndex) => (
                     <TableCell key={colIndex}>
                       {column.cell
                         ? column.cell(row)
-                        : getValue(row, column.accessorKey)}
+                        : String(getValue(row, column.accessorKey) ?? "")}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -128,7 +129,8 @@ export function DataTable<T>({
             <span className="font-medium">
               {Math.min(startIndex + pageSize, filteredData.length)}
             </span>{" "}
-            of <span className="font-medium">{filteredData.length}</span> results
+            of <span className="font-medium">{filteredData.length}</span>{" "}
+            results
           </div>
           <div className="flex items-center space-x-2">
             <Button
