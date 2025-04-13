@@ -14,11 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Bell, ChevronDown, Menu } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 type NavItem = {
   label: string;
@@ -26,10 +22,10 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: "Company Data",       href: "/company"            },
-  { label: "Residents",          href: "/residents"          },
-  { label: "Orders",             href: "/"                   },
-  { label: "Received",           href: "/received-documents" },
+  { label: "Company Data", href: "/company" },
+  { label: "Residents", href: "/residents" },
+  { label: "Orders", href: "/" },
+  { label: "Received", href: "/received-documents" },
 ];
 
 export function Header() {
@@ -56,7 +52,6 @@ export function Header() {
     <header className="bg-white shadow-sm fixed w-full top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-
           {/* Left side: Logo + Mobile menu trigger */}
           <div className="flex items-center gap-4">
             <Sheet>
@@ -71,7 +66,7 @@ export function Header() {
                   <div className="flex items-center mb-6">
                     <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center">
                       <span className="text-white font-montserrat font-bold text-xl">
-                        RTA
+                        MEnergy
                       </span>
                     </div>
                     <span className="ml-2 text-primary font-montserrat font-semibold text-lg">
@@ -103,11 +98,11 @@ export function Header() {
             <Link to="/" className="flex items-center">
               <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center">
                 <span className="text-white font-montserrat font-bold text-xl">
-                  RTA
+                  ME
                 </span>
               </div>
               <span className="ml-2 text-primary font-montserrat font-semibold text-lg hidden md:block">
-                Report Transfer Application
+                MEnergy
               </span>
             </Link>
           </div>
@@ -193,20 +188,15 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <div className="flex items-center gap-2">
-                    Settings
-                  </div>
+                  <div className="flex items-center gap-2">Settings</div>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <div className="flex items-center gap-2">
-                    Log out
-                  </div>
+                  <div className="flex items-center gap-2">Log out</div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
         </div>
       </div>
     </header>

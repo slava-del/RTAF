@@ -54,9 +54,9 @@ export default function ResidentsPage() {
       cell: (row: any) =>
         row.file_url ? (
           <button
-            onClick={async () => {
+            onClick={() => {
               setDriveUrl(row.file_url);
-              await loadDriveFileByUrl(row.file_url);
+              loadDriveFileByUrl(row.file_url);
             }}
             className="text-blue-600 underline"
           >
@@ -181,20 +181,7 @@ export default function ResidentsPage() {
   };
 
   const handleEmergencyPush = async () => {
-    if (!("Notification" in window)) {
-      alert("This browser does not support notifications.");
-      return;
-    }
-
-    const permission = await Notification.requestPermission();
-
-    if (permission === "granted") {
-      new Notification("🚨 EMERGENCY SITUATION!!", {
-        body: "Document Linked: 1",
-      });
-    } else {
-      alert("Notification permission denied or blocked.");
-    }
+    alert("Situatie de urgenta raportata. Document atasat: NR. 1");
   };
 
   return (
@@ -207,6 +194,7 @@ export default function ResidentsPage() {
       <Card className="mb-6">
         <CardHeader className="pb-3">
           <h3 className="text-lg font-medium">Uploaded Reports</h3>
+          <Button>Create report</Button>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -270,6 +258,27 @@ export default function ResidentsPage() {
                   Report #{r.id}
                 </option>
               ))}
+            </select>
+            <select
+              value={selectedReportId}
+              onChange={(e) => setSelectedReportId(e.target.value)}
+              className="p-2 border rounded-md text-sm"
+            >
+              <option value="">Select emergency situation...</option>
+              <option value="1" key="1">
+                Efecte imprevizibile ale regulilor pietei energetice electrice -
+                Nr. Sc. Reg. 25
+              </option>
+              <option value="2" key="2">
+                Atacul din interior, actiuni de sabotaj ale angajatilor pe
+                intern - Nr. Sc. Reg. 4
+              </option>
+              <option value="3" key="3">
+                Amenintare pentru angajatii cheie - Nr. Sc. Reg. 5
+              </option>{" "}
+              <option value="4" key="4">
+                Furtuna solara - Nr. Sc. Reg. 7
+              </option>
             </select>
             <Button onClick={handleEmergencyPush}>
               Link Emergency Situation
