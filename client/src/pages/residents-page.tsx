@@ -53,14 +53,15 @@ export default function ResidentsPage() {
       accessorKey: "file_url",
       cell: (row: any) =>
         row.file_url ? (
-          <a
-            href={row.file_url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={async () => {
+              setDriveUrl(row.file_url);
+              await loadDriveFileByUrl(row.file_url);
+            }}
             className="text-blue-600 underline"
           >
             Open
-          </a>
+          </button>
         ) : (
           <span className="text-gray-400 italic">No file</span>
         ),
@@ -115,6 +116,29 @@ export default function ResidentsPage() {
     const reader = new FileReader();
     reader.onload = () => setMdContent(reader.result as string);
     reader.readAsText(file);
+  };
+
+  const loadDriveFileByUrl = async (url: string) => {
+    const idMatch = url.match(/[-\w]{25,}/);
+    if (!idMatch) {
+      alert("Couldn't find a Drive file ID in that URL.");
+      return;
+    }
+    const fileId = idMatch[0];
+    const rawUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    try {
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+        rawUrl
+      )}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      setMdContent(text);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load from Drive. Make sure the file is public.");
+    }
   };
 
   // Fixed Google Drive handler
